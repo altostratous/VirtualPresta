@@ -21,13 +21,9 @@ namespace VirtualPresta
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Bukimedia.PrestaSharp.Factories.ProductFactory factory = new Bukimedia.PrestaSharp.Factories.ProductFactory("http://4piano.ir/api", "develop@4piano.ir", "12345678");
-            Bukimedia.PrestaSharp.Entities.product product = new Bukimedia.PrestaSharp.Entities.product();
-            product.is_virtual = 1;
-            product.active = 1;
-            factory.Add(product);
-
-            factory.Add(product);
+            Bukimedia.PrestaSharp.Factories.ProductFactory factory = new Bukimedia.PrestaSharp.Factories.ProductFactory("http://4piano.ir/api", "CU8VH49ZQT6QTMGDCUI5UHD1YK5PDJLY", "");
+            List<Bukimedia.PrestaSharp.Entities.product> products = factory.GetAll();
+            factory.
         }
     }
 }
