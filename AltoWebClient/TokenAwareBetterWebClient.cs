@@ -9,6 +9,8 @@ namespace AltoWebClient
 {
     public class TokenAwareBetterWebClient : BetterWebClient
     {
+        WebRequest _request = null;
+
         public List<string> QueryStrnigVaribalesToPreserve { get; set; }
 
         public TokenAwareBetterWebClient()
@@ -18,14 +20,24 @@ namespace AltoWebClient
 
         protected override WebRequest GetWebRequest(Uri address)
         {
-            WebRequest _request = base.GetWebRequest(address);
+            Dictionary<string, string> values = new Dictionary<string, string>();
+
+            foreach (string variable in QueryString.Keys)
+            {
+                if (QueryStrnigVaribalesToPreserve.Contains(variable))
+                {
+                    values.Add(variable, QueryString[variable]);
+                }
+            }
+            _request = base.GetWebRequest(address);
 
             var httpRequest = _request as HttpWebRequest;
 
             if (_request != null)
             {
-                foreach (string variable in QueryStrnigVaribalesToPreserve)
+                foreach (string variable in values.Keys)
                 {
+                    QueryString.Set(variable, values[variable]);
                 }
             }
 

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
 using System.Collections.Specialized;
+using AltoWebClient;
 
 namespace VirtualPresta
 {
@@ -21,9 +22,10 @@ namespace VirtualPresta
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Bukimedia.PrestaSharp.Factories.ProductFactory factory = new Bukimedia.PrestaSharp.Factories.ProductFactory("http://4piano.ir/api", "CU8VH49ZQT6QTMGDCUI5UHD1YK5PDJLY", "");
-            List<Bukimedia.PrestaSharp.Entities.product> products = factory.GetAll();
-            factory.
+            CredentialWebClient client = new CredentialWebClient();
+            client.QueryStrnigVaribalesToPreserve.Add("token");
+            client.Login("http://4piano.ir/admin300ix65de/index.php?controller=AdminLogin", "develop@4piano.ir", "12345678");
+            MessageBox.Show("Hello");
         }
     }
 }

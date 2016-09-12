@@ -91,6 +91,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AltoWebClient\AltoWebClient.csproj">
+      <Project>{48b4f3c5-246c-4191-8739-3f08fff4fba6}</Project>
+      <Name>AltoWebClient</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
