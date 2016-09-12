@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
 using System.Collections.Specialized;
-using AltoWebClient;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 
 namespace VirtualPresta
 {
@@ -22,10 +23,7 @@ namespace VirtualPresta
 
         private void button1_Click(object sender, EventArgs e)
         {
-            CredentialWebClient client = new CredentialWebClient();
-            client.QueryStrnigVaribalesToPreserve.Add("token");
-            client.Login("http://4piano.ir/admin300ix65de/index.php?controller=AdminLogin", "develop@4piano.ir", "12345678");
-            MessageBox.Show("Hello");
+            PrestaShopClient client = new PrestaShopClient("http://4piano.ir/admin300ix65de/", "develop@4piano.ir", "12345678");
         }
     }
 }
