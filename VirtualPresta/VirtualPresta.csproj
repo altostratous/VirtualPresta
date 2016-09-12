@@ -78,6 +78,7 @@
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
     <Compile Include="PrestaShopClient.cs" />
+    <Compile Include="Product.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Main.resx">

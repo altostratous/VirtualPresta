@@ -25,9 +25,9 @@ namespace VirtualPresta
         private void button1_Click(object sender, EventArgs e)
         {
             client = new PrestaShopClient("http://4piano.ir/admin300ix65de/", "develop@4piano.ir", "12345678", false);
-            client.GetProductForm();
-            //client.Dispose();
-        }
+            client.Save(new Product() { Name = "نام امتحانی", File = "E:\\asfd.txt"});
+                //client.Dispose();
+            }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
