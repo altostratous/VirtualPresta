@@ -49,6 +49,7 @@
             this.Controls.Add(this.button1);
             this.Name = "Main";
             this.Text = "Virtual Presta";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.ResumeLayout(false);
 
         }

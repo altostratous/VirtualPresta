@@ -16,6 +16,7 @@ namespace VirtualPresta
 {
     public partial class Main : Form
     {
+        PrestaShopClient client;
         public Main()
         {
             InitializeComponent();
@@ -23,7 +24,14 @@ namespace VirtualPresta
 
         private void button1_Click(object sender, EventArgs e)
         {
-            PrestaShopClient client = new PrestaShopClient("http://4piano.ir/admin300ix65de/", "develop@4piano.ir", "12345678");
+            client = new PrestaShopClient("http://4piano.ir/admin300ix65de/", "develop@4piano.ir", "12345678", false);
+            client.GetProductForm();
+            //client.Dispose();
+        }
+
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            client.Dispose();
         }
     }
 }
