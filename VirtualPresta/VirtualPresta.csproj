@@ -79,10 +79,19 @@
     </Compile>
     <Compile Include="PrestaShopClient.cs" />
     <Compile Include="Product.cs" />
+    <Compile Include="ProductView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProductView.Designer.cs">
+      <DependentUpon>ProductView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProductView.resx">
+      <DependentUpon>ProductView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

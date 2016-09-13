@@ -32,7 +32,7 @@
             this.startButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.productsPanel = new System.Windows.Forms.Panel();
             this.uploadBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
             // 
@@ -74,16 +74,16 @@
             this.progressBar.Size = new System.Drawing.Size(677, 23);
             this.progressBar.TabIndex = 0;
             // 
-            // panel1
+            // productsPanel
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.productsPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.AutoScroll = true;
-            this.panel1.Location = new System.Drawing.Point(13, 42);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(676, 297);
-            this.panel1.TabIndex = 4;
+            this.productsPanel.AutoScroll = true;
+            this.productsPanel.Location = new System.Drawing.Point(13, 42);
+            this.productsPanel.Name = "productsPanel";
+            this.productsPanel.Size = new System.Drawing.Size(676, 297);
+            this.productsPanel.TabIndex = 4;
             // 
             // uploadBackgroundWorker
             // 
@@ -96,7 +96,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(701, 409);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.productsPanel);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.startButton);
@@ -112,7 +112,7 @@
         private System.Windows.Forms.Button startButton;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.ProgressBar progressBar;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel productsPanel;
         private System.ComponentModel.BackgroundWorker uploadBackgroundWorker;
     }
 }
