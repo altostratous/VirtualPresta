@@ -80,6 +80,7 @@
             this.imagesButton.TabIndex = 6;
             this.imagesButton.Text = "Images";
             this.imagesButton.UseVisualStyleBackColor = true;
+            this.imagesButton.Click += new System.EventHandler(this.imagesButton_Click);
             // 
             // imagePicturBox
             // 
