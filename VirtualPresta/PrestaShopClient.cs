@@ -152,7 +152,7 @@ namespace VirtualPresta
             product.FileAndImagesSaved = true;
         }
 
-        public IEnumerable<Product> GetProductsFromCSV(string csvFile)
+        public static IEnumerable<Product> GetProductsFromCSV(string csvFile)
         {
             CsvReader reader = new CsvReader(new System.IO.StreamReader(csvFile), new CsvHelper.Configuration.CsvConfiguration() { Delimiter = ";" });
             while (reader.Read())

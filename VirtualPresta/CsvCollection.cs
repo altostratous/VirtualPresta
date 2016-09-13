@@ -30,6 +30,14 @@ namespace VirtualPresta
 
 		private CsvReader createReader()
         {
+			//if (data == "")
+   //         {
+   //             StringWriter stringWriter = new StringWriter();
+
+   //             CsvWriter writer = new CsvWriter(stringWriter, CsvConfiguration);
+   //             writer.NextRecord();
+			//	data = stringWriter.ToString();
+   //         }
             StringReader stringReader = new StringReader(data);
             return new CsvReader(stringReader, CsvConfiguration);
         }
@@ -39,6 +47,7 @@ namespace VirtualPresta
             get
             {
                 CsvReader reader = createReader();
+                if (data == "") return null;
                 reader.Read();
                 int index = new List<string>(reader.FieldHeaders).IndexOf(key);
                 if (index == -1)
@@ -52,25 +61,33 @@ namespace VirtualPresta
 
                 StringWriter stringWriter = new StringWriter();
 
+				
                 StringReader stringReader = new StringReader(data);
                 CsvReader reader = createReader();
-                reader.Read();
+
                 CsvWriter writer = new CsvWriter(stringWriter, CsvConfiguration);
-                foreach (string header in reader.FieldHeaders)
+                if (data != "")
                 {
-                    writer.WriteField(header);
+                    reader.Read();
+                    foreach (string header in reader.FieldHeaders)
+                    {
+                        writer.WriteField(header);
+                    }
                 }
 				if (!exists)
 					writer.WriteField(key);
                 writer.NextRecord();
-                foreach (string header in reader.FieldHeaders)
+                if (data != "")
                 {
-                    if (header == key)
+                    foreach (string header in reader.FieldHeaders)
                     {
-                        writer.WriteField(value);
-                    }
-                    else {
-                        writer.WriteField(reader.GetField(header));
+                        if (header == key)
+                        {
+                            writer.WriteField(value);
+                        }
+                        else {
+                            writer.WriteField(reader.GetField(header));
+                        }
                     }
                 }
 				if (!exists)

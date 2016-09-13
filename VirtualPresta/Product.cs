@@ -8,6 +8,10 @@ namespace VirtualPresta
 {
     public class Product
     {
+        public Product()
+        {
+            Data = new CsvCollection();
+        }
         public int Id {
             get
             {

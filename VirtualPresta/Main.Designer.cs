@@ -44,6 +44,7 @@
             this.openButton.TabIndex = 1;
             this.openButton.Text = "OpenFile";
             this.openButton.UseVisualStyleBackColor = true;
+            this.openButton.Click += new System.EventHandler(this.openButton_Click);
             // 
             // startButton
             // 
@@ -91,6 +92,8 @@
             this.uploadBackgroundWorker.WorkerReportsProgress = true;
             this.uploadBackgroundWorker.WorkerSupportsCancellation = true;
             this.uploadBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.uploadBackgroundWorker_DoWork);
+            this.uploadBackgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.uploadBackgroundWorker_ProgressChanged);
+            this.uploadBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.uploadBackgroundWorker_RunWorkerCompleted);
             // 
             // Main
             // 
