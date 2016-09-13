@@ -29,6 +29,13 @@ namespace VirtualPresta
 
             client.Dispose();
         }
-        
+
+        private void startButton_Click(object sender, EventArgs e)
+        {
+            var s = new CSVView();
+            s.CSV = @"shafah;asfdhas
+shdfl;sad";
+            MessageBox.Show(s.CSV);
+        }
     }
 }
