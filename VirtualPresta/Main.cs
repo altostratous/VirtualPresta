@@ -21,17 +21,14 @@ namespace VirtualPresta
         {
             InitializeComponent();
         }
-
-        private void button1_Click(object sender, EventArgs e)
+        
+        
+        private void uploadBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            client = new PrestaShopClient("http://4piano.ir/admin300ix65de/", "develop@4piano.ir", "12345678", false);
-            client.ApplyCSV("E:\\pro.csv", client.GetProductsFromCSV("E:\\pro.csv"));
-            
-        }
+            client = new PrestaShopClient("http://4piano.ir/admin300ix65de/", "develop@4piano.ir", "12345678", true);
 
-        private void Main_FormClosing(object sender, FormClosingEventArgs e)
-        {
             client.Dispose();
         }
+        
     }
 }
