@@ -61,8 +61,20 @@ namespace VirtualPresta
                 foreach (string filename in imageOpenFileDialog.FileNames)
                 {
                     imagePicturBox.ImageLocation = filename;
-                    
+
                 }
+
+                UpdateView();
+            }
+        }
+
+        private OpenFileDialog fileOpenFileDialog = new OpenFileDialog() { };
+        private void fileButton_Click(object sender, EventArgs e)
+        {
+            if(fileOpenFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                product.File = fileOpenFileDialog.FileName;
+                UpdateView();
             }
         }
     }

@@ -28,12 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.openButton = new System.Windows.Forms.Button();
             this.startButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.productsPanel = new System.Windows.Forms.Panel();
             this.uploadBackgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.usertextbox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.passwordtextbox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // openButton
@@ -49,7 +54,7 @@
             // startButton
             // 
             this.startButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.startButton.Location = new System.Drawing.Point(12, 374);
+            this.startButton.Location = new System.Drawing.Point(12, 470);
             this.startButton.Name = "startButton";
             this.startButton.Size = new System.Drawing.Size(75, 23);
             this.startButton.TabIndex = 2;
@@ -60,20 +65,21 @@
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.cancelButton.Location = new System.Drawing.Point(93, 374);
+            this.cancelButton.Location = new System.Drawing.Point(93, 470);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 3;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
             // progressBar
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar.Location = new System.Drawing.Point(12, 345);
+            this.progressBar.Location = new System.Drawing.Point(12, 441);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(677, 23);
+            this.progressBar.Size = new System.Drawing.Size(951, 23);
             this.progressBar.TabIndex = 0;
             // 
             // productsPanel
@@ -84,7 +90,7 @@
             this.productsPanel.AutoScroll = true;
             this.productsPanel.Location = new System.Drawing.Point(13, 42);
             this.productsPanel.Name = "productsPanel";
-            this.productsPanel.Size = new System.Drawing.Size(676, 297);
+            this.productsPanel.Size = new System.Drawing.Size(950, 393);
             this.productsPanel.TabIndex = 4;
             // 
             // uploadBackgroundWorker
@@ -95,19 +101,63 @@
             this.uploadBackgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.uploadBackgroundWorker_ProgressChanged);
             this.uploadBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.uploadBackgroundWorker_RunWorkerCompleted);
             // 
+            // usertextbox
+            // 
+            this.usertextbox.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::VirtualPresta.Properties.Settings.Default, "username", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.usertextbox.Location = new System.Drawing.Point(169, 14);
+            this.usertextbox.Name = "usertextbox";
+            this.usertextbox.Size = new System.Drawing.Size(100, 20);
+            this.usertextbox.TabIndex = 5;
+            this.usertextbox.Text = global::VirtualPresta.Properties.Settings.Default.username;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(133, 17);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "Email:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(309, 17);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(56, 13);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "Password:";
+            // 
+            // passwordtextbox
+            // 
+            this.passwordtextbox.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::VirtualPresta.Properties.Settings.Default, "password", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.passwordtextbox.Location = new System.Drawing.Point(365, 14);
+            this.passwordtextbox.Name = "passwordtextbox";
+            this.passwordtextbox.PasswordChar = '*';
+            this.passwordtextbox.Size = new System.Drawing.Size(100, 20);
+            this.passwordtextbox.TabIndex = 8;
+            this.passwordtextbox.Text = global::VirtualPresta.Properties.Settings.Default.password;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(701, 409);
+            this.ClientSize = new System.Drawing.Size(975, 505);
+            this.Controls.Add(this.passwordtextbox);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.usertextbox);
             this.Controls.Add(this.productsPanel);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.startButton);
             this.Controls.Add(this.openButton);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Main";
             this.Text = "Virtual Presta";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -118,6 +168,10 @@
         private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.Panel productsPanel;
         private System.ComponentModel.BackgroundWorker uploadBackgroundWorker;
+        private System.Windows.Forms.TextBox usertextbox;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox passwordtextbox;
     }
 }
 

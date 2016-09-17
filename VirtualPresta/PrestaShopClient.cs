@@ -7,6 +7,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using CsvHelper;
+using System.IO;
 
 namespace VirtualPresta
 {
@@ -34,7 +35,7 @@ namespace VirtualPresta
             webDriver.FindElement(By.Id("passwd")).SendKeys(password);
             webDriver.FindElement(By.CssSelector("button")).Click();
             webDriver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
-            WebDriverWait wait = new WebDriverWait(webDriver, new TimeSpan(0, 0, 10));
+            WebDriverWait wait = new WebDriverWait(webDriver, new TimeSpan(0, 0, 30));
             wait.Until(ExpectedConditions.UrlContains("AdminDashboard"));
         }
 
@@ -43,7 +44,13 @@ namespace VirtualPresta
             goToProductForm();
             saveProduct(product);
 
-            if (product.File != null)
+            bool hasImage = false;
+            if (product.ImageFiles != null)
+            {
+                if (product.ImageFiles.Count > 0)
+                    hasImage = true;
+            }
+            if (product.File != null || hasImage)
             {
 
                 saveFileAndImages(product);
@@ -62,7 +69,7 @@ namespace VirtualPresta
         private void goToProductForm()
         {
             Dictionary<string, string> result = new Dictionary<string, string>();
-            while (!webDriver.Url.Contains("AdminProducts"))
+            while (!webDriver.Url.Contains("addproduct"))
             {
                 webDriver.Url = BaseAddress + "index.php?controller=AdminProducts&addproduct";
                 System.Threading.Thread.Sleep(100);
@@ -128,6 +135,12 @@ namespace VirtualPresta
                 }
                 webDriver.FindElement(By.Id("file")).SendKeys(files);
                 webDriver.FindElement(By.Id("file-upload-button")).Click();
+                while (!webDriver.FindElement(By.Id("file-success")).Displayed)
+                {
+                    System.Threading.Thread.Sleep(1000);
+                }
+
+                System.Threading.Thread.Sleep(1000);
             }
 
             webDriver.FindElement(By.Id("link-VirtualProduct")).Click();
@@ -154,23 +167,30 @@ namespace VirtualPresta
 
         public static IEnumerable<Product> GetProductsFromCSV(string csvFile)
         {
-            CsvReader reader = new CsvReader(new System.IO.StreamReader(csvFile), new CsvHelper.Configuration.CsvConfiguration() { Delimiter = ";" });
-            while (reader.Read())
-            {
-                Product product = new Product() { Id = Convert.ToInt32(reader.GetField("ID")), Name = reader.GetField("Name *") };
-                if (reader.FieldHeaders.Contains("File"))
-                {
-                    product.File = reader.GetField("File");
-                }
-                if (reader.FieldHeaders.Contains("ImageFiles"))
-                {
-                    if (!string.IsNullOrEmpty(reader.GetField("ImageFiles")))
-                    {
-                        product.ImageFiles = new List<string>(reader.GetField("ImageFiles").Split(','));
-                    }
-                }
-                yield return product;
+            //CsvReader reader = new CsvReader(new System.IO.StreamReader(csvFile), new CsvHelper.Configuration.CsvConfiguration() { Delimiter = ";" });
+            //while (reader.Read())
+            //{
+            //    Product product = new Product() { Id = Convert.ToInt32(reader.GetField("ID")), Name = reader.GetField("Name *") };
+            //    if (reader.FieldHeaders.Contains("File"))
+            //    {
+            //        product.File = reader.GetField("File");
+            //    }
+            //    if (reader.FieldHeaders.Contains("ImageFiles"))
+            //    {
+            //        if (!string.IsNullOrEmpty(reader.GetField("ImageFiles")))
+            //        {
+            //            product.ImageFiles = new List<string>(reader.GetField("ImageFiles").Split(','));
+            //        }
+            //    }
+            //    yield return product;
 
+            //}
+            //yield break;
+            StreamReader reader = new StreamReader(csvFile);
+            string header = reader.ReadLine();
+            while (!reader.EndOfStream)
+            {
+                yield return new Product() { Data = new CsvCollection() { Data = header + Environment.NewLine + reader.ReadLine() } };
             }
             yield break;
         }

@@ -53,7 +53,7 @@
             // 
             this.uploadedCheckbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.uploadedCheckbox.AutoSize = true;
-            this.uploadedCheckbox.Location = new System.Drawing.Point(911, 18);
+            this.uploadedCheckbox.Location = new System.Drawing.Point(911, 26);
             this.uploadedCheckbox.Name = "uploadedCheckbox";
             this.uploadedCheckbox.Size = new System.Drawing.Size(72, 17);
             this.uploadedCheckbox.TabIndex = 4;
@@ -66,10 +66,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.fileButton.Location = new System.Drawing.Point(69, 3);
             this.fileButton.Name = "fileButton";
-            this.fileButton.Size = new System.Drawing.Size(40, 44);
+            this.fileButton.Size = new System.Drawing.Size(40, 73);
             this.fileButton.TabIndex = 5;
             this.fileButton.Text = "File";
             this.fileButton.UseVisualStyleBackColor = true;
+            this.fileButton.Click += new System.EventHandler(this.fileButton_Click);
             // 
             // imagesButton
             // 
@@ -77,7 +78,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.imagesButton.Location = new System.Drawing.Point(115, 3);
             this.imagesButton.Name = "imagesButton";
-            this.imagesButton.Size = new System.Drawing.Size(52, 44);
+            this.imagesButton.Size = new System.Drawing.Size(52, 73);
             this.imagesButton.TabIndex = 6;
             this.imagesButton.Text = "Images";
             this.imagesButton.UseVisualStyleBackColor = true;
@@ -90,7 +91,8 @@
             this.imagePicturBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.imagePicturBox.Location = new System.Drawing.Point(3, 3);
             this.imagePicturBox.Name = "imagePicturBox";
-            this.imagePicturBox.Size = new System.Drawing.Size(60, 44);
+            this.imagePicturBox.Size = new System.Drawing.Size(60, 73);
+            this.imagePicturBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.imagePicturBox.TabIndex = 7;
             this.imagePicturBox.TabStop = false;
             // 
@@ -98,7 +100,7 @@
             // 
             this.csvSavedCheckbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.csvSavedCheckbox.AutoSize = true;
-            this.csvSavedCheckbox.Location = new System.Drawing.Point(911, 33);
+            this.csvSavedCheckbox.Location = new System.Drawing.Point(911, 49);
             this.csvSavedCheckbox.Name = "csvSavedCheckbox";
             this.csvSavedCheckbox.Size = new System.Drawing.Size(93, 17);
             this.csvSavedCheckbox.TabIndex = 9;
@@ -110,10 +112,11 @@
             this.csvView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.csvView.AutoScroll = true;
             this.csvView.CSV = "\r\n";
             this.csvView.Location = new System.Drawing.Point(173, 3);
             this.csvView.Name = "csvView";
-            this.csvView.Size = new System.Drawing.Size(732, 44);
+            this.csvView.Size = new System.Drawing.Size(732, 73);
             this.csvView.TabIndex = 8;
             // 
             // ProductView
@@ -128,7 +131,7 @@
             this.Controls.Add(this.uploadedCheckbox);
             this.Controls.Add(this.savedCheckbox);
             this.Name = "ProductView";
-            this.Size = new System.Drawing.Size(1007, 50);
+            this.Size = new System.Drawing.Size(1007, 79);
             ((System.ComponentModel.ISupportInitialize)(this.imagePicturBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

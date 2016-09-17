@@ -34,7 +34,8 @@ namespace VirtualPresta
             }
             int counter = 0;
             int totalWork = 2 + products.Count(product => { return !product.FileAndImagesSaved; });
-            client = new PrestaShopClient("http://4piano.ir/admin300ix65de/", "develop@4piano.ir", "12345678", true);
+            
+            client = new PrestaShopClient("http://4piano.ir/admin300ix65de/", Properties.Settings.Default.username, Properties.Settings.Default.password, false);
             counter++;
             uploadBackgroundWorker.ReportProgress(100 * counter / totalWork);
             if (uploadBackgroundWorker.CancellationPending)
@@ -42,14 +43,20 @@ namespace VirtualPresta
                 e.Cancel = true;
                 return;
             }
-            foreach (Product product in products)
+            foreach (Product product in products.FindAll(item => { return !item.FileAndImagesSaved; })) 
             {
-                client.Save(product);
+                //try {
+                    client.Save(product);
+                //} catch (Exception)
+                //{
+                //    continue;
+                //}
                 foreach(ProductView view in productsPanel.Controls)
                 {
                     if(view.Product == product)
                     {
-                        view.Product = product;
+                        view.BeginInvoke(new Action(delegate { view.UpdateView(); }));
+                        
                     }
                 }
                 counter++;
@@ -60,14 +67,20 @@ namespace VirtualPresta
                     return;
                 }
             }
-            client.ApplyCSV(csvTempAddress, products);
+            //client.ApplyCSV(csvTempAddress, products);
+            client.ApplyCSV(openFileDialog.FileName, products);
+            foreach (ProductView view in productsPanel.Controls)
+            {
+                view.Product.CSVPushed = true;
+                view.BeginInvoke(new Action(delegate { view.UpdateView(); }));
+            }
             uploadBackgroundWorker.ReportProgress(100);
         }
 
         private void startButton_Click(object sender, EventArgs e)
         {
             uploadBackgroundWorker.RunWorkerAsync();
-            productsPanel.Enabled = startButton.Enabled = false;
+            //productsPanel.Enabled = startButton.Enabled = false;
         }
 
         private void uploadBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -80,7 +93,7 @@ namespace VirtualPresta
 
         private void uploadBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            productsPanel.Enabled = startButton.Enabled = true;
+            //productsPanel.Enabled = startButton.Enabled = true;
             try {
                 client.Dispose();
             } catch (Exception)
@@ -101,6 +114,24 @@ namespace VirtualPresta
                 {
                     productsPanel.Controls.Add(new ProductView(product) { Dock = DockStyle.Top});
                 }
+            }
+        }
+
+        private void cancelButton_Click(object sender, EventArgs e)
+        {
+            uploadBackgroundWorker.CancelAsync();
+        }
+
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Properties.Settings.Default.Save();
+            try
+            {
+                client.Dispose();
+            }
+            catch (Exception)
+            {
+
             }
         }
     }
