@@ -11,15 +11,21 @@ using System.IO;
 
 namespace VirtualPresta
 {
-    public class PrestaShopClient : IDisposable
+    public class PrestaShopClient : IDisposable, ILogger
     {
-
+        ILogger parentLogger = null;
+        public void log(string tolog)
+        {
+            if (parentLogger != null)
+                parentLogger.log(tolog);
+        }
         private IWebDriver webDriver = null;
 
         public string BaseAddress { get; set; }
 
-        public PrestaShopClient(string baseAddress, string email, string password, bool scilence = true)
+        public PrestaShopClient(string baseAddress, string email, string password, bool scilence = true, ILogger logger = null)
         {
+            this.parentLogger = logger;
             this.BaseAddress = baseAddress;
             ChromeDriverService service = ChromeDriverService.CreateDefaultService();
             var options = new ChromeOptions();
@@ -41,9 +47,11 @@ namespace VirtualPresta
 
         public void Save(Product product)
         {
+            log("going to new product page");
             goToProductForm();
+            log("in the new product page");
             saveProduct(product);
-
+            log("created the product online");
             bool hasImage = false;
             if (product.ImageFiles != null)
             {
@@ -52,8 +60,9 @@ namespace VirtualPresta
             }
             if (product.File != null || hasImage)
             {
-
+                log("starting to save images and files");
                 saveFileAndImages(product);
+                log("saved images and files");
             }
         }
 
@@ -95,7 +104,7 @@ namespace VirtualPresta
                 {
                 }
             }
-            WebDriverWait wait = new WebDriverWait(webDriver, new TimeSpan(0, 0, 10));
+            WebDriverWait wait = new WebDriverWait(webDriver, new TimeSpan(0, 0, 30));
             wait.Until(ExpectedConditions.UrlContains("id_product"));
             product.Id = extractProductId(webDriver.Url);
             product.Saved = true;

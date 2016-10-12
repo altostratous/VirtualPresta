@@ -54,18 +54,16 @@ namespace VirtualPresta
         OpenFileDialog imageOpenFileDialog = new OpenFileDialog() { Filter = "Image Files|*.jpg;*.jpeg;*.png", Multiselect=true};
         private void imagesButton_Click(object sender, EventArgs e)
         {
-            string images = "";
-
             if (imageOpenFileDialog.ShowDialog() == DialogResult.OK)
             {
                 foreach (string filename in imageOpenFileDialog.FileNames)
                 {
                     imagePicturBox.ImageLocation = filename;
-
                 }
-
+                product.ImageFiles = new List<string>(imageOpenFileDialog.FileNames);
                 UpdateView();
             }
+
         }
 
         private OpenFileDialog fileOpenFileDialog = new OpenFileDialog() { };

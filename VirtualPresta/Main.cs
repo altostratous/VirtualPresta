@@ -15,38 +15,49 @@ using System.IO;
 
 namespace VirtualPresta
 {
-    public partial class Main : Form
+    public partial class Main : Form, ILogger
     {
         PrestaShopClient client;
         public Main()
         {
+            log("program started at" + DateTime.Now.ToString("hh:mm:ss"));
             InitializeComponent();
         }
         
-        
+        public void log(string tolog)
+        {
+            StreamWriter writer = new StreamWriter("log.txt", true);
+            writer.WriteLine(tolog);
+            writer.Close();
+        }
         private void uploadBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            string csvTempAddress = Path.Combine(Application.ExecutablePath, "temp.csv");
+            //string csvTempAddress = Path.Combine(Application.ExecutablePath, "temp.csv");
+           
             List<Product> products = new List<Product>();
             foreach (ProductView productView in productsPanel.Controls)
             {
                 products.Add(productView.Product);
             }
+            log("got products");
             int counter = 0;
             int totalWork = 2 + products.Count(product => { return !product.FileAndImagesSaved; });
             
-            client = new PrestaShopClient("http://4piano.ir/admin300ix65de/", Properties.Settings.Default.username, Properties.Settings.Default.password, false);
+            client = new PrestaShopClient("http://4piano.ir/admin300ix65de/", Properties.Settings.Default.username, Properties.Settings.Default.password, false, this);
+            log("initialized client");
             counter++;
             uploadBackgroundWorker.ReportProgress(100 * counter / totalWork);
             if (uploadBackgroundWorker.CancellationPending)
             {
                 e.Cancel = true;
+                log("cancelling");
                 return;
             }
             foreach (Product product in products.FindAll(item => { return !item.FileAndImagesSaved; })) 
             {
                 //try {
                     client.Save(product);
+                log("saved one product");
                 //} catch (Exception)
                 //{
                 //    continue;
@@ -64,6 +75,7 @@ namespace VirtualPresta
                 if (uploadBackgroundWorker.CancellationPending)
                 {
                     e.Cancel = true;
+                    log("cancelling");
                     return;
                 }
             }
@@ -74,6 +86,7 @@ namespace VirtualPresta
                 view.Product.CSVPushed = true;
                 view.BeginInvoke(new Action(delegate { view.UpdateView(); }));
             }
+            log("applied csv");
             uploadBackgroundWorker.ReportProgress(100);
         }
 
@@ -93,11 +106,14 @@ namespace VirtualPresta
 
         private void uploadBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            //productsPanel.Enabled = startButton.Enabled = true;
+            //productsPanel.Enabled = startButton.Enabled = true;;
+            log("background worker completd");
+            log("background worker is " + (e.Cancelled ? "" : "not") + " cancelled");
             try {
                 client.Dispose();
             } catch (Exception)
             {
+                log("could not dispose driver");
                 return;
             }
         }
