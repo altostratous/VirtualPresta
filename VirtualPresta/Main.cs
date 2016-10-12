@@ -106,6 +106,11 @@ namespace VirtualPresta
 
         private void uploadBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+
+            progressBar.Invoke(new Action(delegate
+            {
+                progressBar.Value = 0;
+            }));
             //productsPanel.Enabled = startButton.Enabled = true;;
             log("background worker completd");
             log("background worker is " + (e.Cancelled ? "" : "not") + " cancelled");
@@ -151,9 +156,13 @@ namespace VirtualPresta
             }
         }
 
+        FolderBrowserDialog backupFolderDialog = new FolderBrowserDialog();
         private void backupButton_Click(object sender, EventArgs e)
         {
-            backupBackgroundWorker.RunWorkerAsync();
+            if (backupFolderDialog.ShowDialog() == DialogResult.OK)
+            {
+                backupBackgroundWorker.RunWorkerAsync();
+            }
         }
 
         private void backupBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -164,12 +173,42 @@ namespace VirtualPresta
             {
                 products.Add(product);
             }
+            int counter = 0;
             foreach (Product product in products)
             {
-                client.DownloadProduct(product, Path.GetDirectoryName(Application.ExecutablePath));
+                if (backupBackgroundWorker.CancellationPending)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+                client.DownloadProduct(product, backupFolderDialog.SelectedPath);
+                PrestaShopClient.SaveCSVFromProducts(products, Path.Combine(backupFolderDialog.SelectedPath, Path.GetFileName(backupFolderDialog.SelectedPath) + ".csv"));
+                counter++;
+                backupBackgroundWorker.ReportProgress(100 * counter / products.Count);
             }
             client.Dispose();
         }
-        
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            backupBackgroundWorker.CancelAsync();
+        }
+
+        private void backupBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            progressBar1.Invoke(new Action(delegate
+            {
+                progressBar1.Value = e.ProgressPercentage;
+            }));
+        }
+
+        private void backupBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+            progressBar1.Invoke(new Action(delegate
+            {
+                progressBar1.Value = 0;
+            }));
+        }
     }
 }

@@ -177,6 +177,29 @@ namespace VirtualPresta
             product.FileAndImagesSaved = true;
         }
 
+        public static void SaveCSVFromProducts(List<Product> products, string v)
+        {
+            StreamWriter streamWriter = new StreamWriter(v);
+            CsvWriter writer = new CsvWriter(streamWriter, new CsvHelper.Configuration.CsvConfiguration() { Delimiter = ";" });
+            if (products.Count > 0)
+            {
+                Product first = products.First();
+                foreach (string header in first.Data.Keys)
+                {
+                    writer.WriteField(header);
+                }
+                foreach (Product product in products)
+                {
+                    writer.NextRecord();
+                    foreach (string key in product.Data.Keys)
+                    {
+                        writer.WriteField(product.Data[key]);
+                    }
+                }
+            }
+            writer.Dispose();
+        }
+
         internal void DownloadProduct(Product product, string v)
         {
             forceGo(string.Format("index.php?controller=AdminProducts&id_product={0}&updateproduct", product.Id));
@@ -197,11 +220,16 @@ namespace VirtualPresta
                 System.Threading.Thread.Sleep(100);
             }
             string downloadPath = webDriver.FindElement(By.Id("virtual_product_name")).GetAttribute("value");
+            while (File.Exists(Path.Combine(v, downloadPath)))
+            {
+                downloadPath = "new" + downloadPath;
+            }
+            product.File = downloadPath;
             string directory = Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
             waitWhileDownlaodComplete(directory, downloadPath);
             string newPath = Path.Combine(directory, downloadPath);
             if (!newPath.Equals(downloadPath))
-                File.Move(newPath, v + downloadPath);
+                File.Move(newPath, Path.Combine( v , downloadPath));
         }
 
         private void waitWhileDownlaodComplete(string directory, string pattern)
@@ -236,16 +264,24 @@ namespace VirtualPresta
             webDriver.FindElement(By.CssSelector("a.btn.btn-continue")).Click();
         }
 
-        public IEnumerable<Product> getProductsSummary()
+        public IEnumerable<Product> getProductsSummary(string directory = null)
         {
             forceGo("index.php?controller=AdminProducts&exportproduct");
             string dir = Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
             waitWhileDownlaodComplete(dir, "product*.csv");
-            foreach(Product product in GetProductsFromCSV(Directory.GetFiles(dir, "product*.csv").First()))
+            string csvFile = Directory.GetFiles(dir, "product*.csv").First();
+            foreach (Product product in GetProductsFromCSV(csvFile))
             {
                 yield return product;
             }
-            File.Delete(Directory.GetFiles(dir, "product*.csv").First());
+            if (directory != null)
+            {
+                File.Move(csvFile, Path.Combine(directory, Path.GetFileName(csvFile)));
+            }
+            else
+            {
+                File.Delete(csvFile);
+            }
             yield break;
         }
 
@@ -274,7 +310,23 @@ namespace VirtualPresta
             string header = reader.ReadLine();
             while (!reader.EndOfStream)
             {
-                yield return new Product(header.Contains("شناسه")) { Data = new CsvCollection() { Data = header + Environment.NewLine + reader.ReadLine() } };
+                Product product = new Product(header.Contains("شناسه")) { Data = new CsvCollection() { Data = header + Environment.NewLine + reader.ReadLine() } };
+                if (product.File != null)
+                {
+                    if (!File.Exists(product.File))
+                    {
+                        string absolute = Path.Combine(Path.GetDirectoryName(csvFile), product.File);
+                        if (!File.Exists(absolute))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            product.File = absolute;
+                        }
+                    }
+                }
+                yield return product;
             }
             reader.Close();
             yield break;

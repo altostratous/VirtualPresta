@@ -31,7 +31,7 @@ namespace VirtualPresta
             savedCheckbox.Checked = product.Saved;
             uploadedCheckbox.Checked = product.FileAndImagesSaved;
             csvSavedCheckbox.Checked = product.CSVPushed;
-            csvView.CSV = product.StandardCSV.Data;
+            csvView.CSV = product.Data.Data;
             try
             {
                 imagePicturBox.ImageLocation = product.ImageFiles.First();

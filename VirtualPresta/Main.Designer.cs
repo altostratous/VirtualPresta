@@ -207,6 +207,7 @@
             this.button1.TabIndex = 8;
             this.button1.Text = "Cancel";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // backupButton
             // 
@@ -223,6 +224,8 @@
             this.backupBackgroundWorker.WorkerReportsProgress = true;
             this.backupBackgroundWorker.WorkerSupportsCancellation = true;
             this.backupBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backupBackgroundWorker_DoWork);
+            this.backupBackgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backupBackgroundWorker_ProgressChanged);
+            this.backupBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backupBackgroundWorker_RunWorkerCompleted);
             // 
             // Main
             // 
