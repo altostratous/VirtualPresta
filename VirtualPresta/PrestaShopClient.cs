@@ -34,6 +34,9 @@ namespace VirtualPresta
                 service.HideCommandPromptWindow = true;
                 options.AddArgument("--window-position=-32000,-32000");
             }
+            options.AddUserProfilePreference("download.prompt_for_download", "false");
+
+            options.AddUserProfilePreference("download.default_directory", Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath));
             webDriver = new ChromeDriver(service, options);
 
             webDriver.Url = baseAddress;
@@ -174,6 +177,45 @@ namespace VirtualPresta
             product.FileAndImagesSaved = true;
         }
 
+        internal void DownloadProduct(Product product, string v)
+        {
+            
+        }
+
+        public IEnumerable<Product> getProductsSummary()
+        {
+            while (!webDriver.Url.Contains("index.php?controller=AdminProducts&exportproduct"))
+            {
+                webDriver.Url = BaseAddress + "index.php?controller=AdminProducts&exportproduct";
+                System.Threading.Thread.Sleep(100);
+            }
+            WebDriverWait wait = new WebDriverWait(webDriver, new TimeSpan(0, 0, 5));
+            wait.Until(ExpectedConditions.UrlContains("AdminProducts"));
+            List<string> invalid_inputs = new List<string>();
+            webDriver.FindElement(By.CssSelector("a.btn.btn-continue")).Click();
+            string dir = Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
+            bool gotFile = false;
+            while (!gotFile)
+            {
+                try
+                {
+
+
+                    StreamWriter writer = new StreamWriter(Directory.GetFiles(dir, "product*.csv").First(), true);
+                    gotFile = true;
+                    writer.Close();
+                }
+                catch (Exception) { }
+                System.Threading.Thread.Sleep(100);
+            }
+            foreach(Product product in GetProductsFromCSV(Directory.GetFiles(dir, "product*.csv").First()))
+            {
+                yield return product;
+            }
+            File.Delete(Directory.GetFiles(dir, "product*.csv").First());
+            yield break;
+        }
+
         public static IEnumerable<Product> GetProductsFromCSV(string csvFile)
         {
             //CsvReader reader = new CsvReader(new System.IO.StreamReader(csvFile), new CsvHelper.Configuration.CsvConfiguration() { Delimiter = ";" });
@@ -201,6 +243,7 @@ namespace VirtualPresta
             {
                 yield return new Product() { Data = new CsvCollection() { Data = header + Environment.NewLine + reader.ReadLine() } };
             }
+            reader.Close();
             yield break;
         }
 

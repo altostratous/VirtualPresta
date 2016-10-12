@@ -150,5 +150,26 @@ namespace VirtualPresta
 
             }
         }
+
+        private void backupButton_Click(object sender, EventArgs e)
+        {
+            backupBackgroundWorker.RunWorkerAsync();
+        }
+
+        private void backupBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<Product> products = new List<Product>();
+            client = new PrestaShopClient("http://4piano.ir/admin300ix65de/", Properties.Settings.Default.username, Properties.Settings.Default.password, false, this);
+            foreach (Product product in client.getProductsSummary())
+            {
+                products.Add(product);
+            }
+            foreach (Product product in products)
+            {
+                client.DownloadProduct(product, Path.GetDirectoryName(Application.ExecutablePath));
+            }
+            client.Dispose();
+        }
+        
     }
 }
