@@ -8,40 +8,59 @@ namespace VirtualPresta
 {
     public class Product
     {
-        public Product()
+        bool persian = false;
+        Dictionary<string, string> persianDic = new Dictionary<string, string>() {
+            { "ID", "شناسه" },
+            { "File", "File" },
+            { "ImageFiles", "ImageFiles" },
+            { "Name *", "نام" }
+        };
+        private string translate(string property)
         {
+            if (!persian)
+            {
+                return property;
+            }
+            else
+            {
+                return persianDic[property];
+            }
+        }
+        public Product(bool persian = false)
+        {
+            this.persian = persian;
             Data = new CsvCollection();
         }
         public int Id {
             get
             {
-                return Convert.ToInt32( Data["ID"]);
+                return Convert.ToInt32( Data[translate("ID")]);
             }
             set
             {
-                Data["ID"] = value.ToString();
+                Data[translate("ID")] = value.ToString();
             }
         }
         public string Name
         {
             get
             {
-                return Data["Name *"];
+                return Data[translate("Name *")];
             }
             set
             {
-                Data["Name *"] = value;
+                Data[translate("Name *")] = value;
             }
         }
         public string File {
-            get { return Data["File"]; }
-            set { Data["File"] = value; }
+            get { return Data[translate("File")]; }
+            set { Data[translate("File")] = value; }
         }
         public List<string> ImageFiles
         {
             get
             {
-                return new List<string>(Data["ImageFiles"].Split(','));
+                return new List<string>(Data[translate("ImageFiles")].Split(','));
 
             }
             set
@@ -53,7 +72,7 @@ namespace VirtualPresta
                         res += ',';
                     res += image;
                 }
-                Data["ImageFiles"] = res;
+                Data[translate("ImageFiles")] = res;
             }
         }
 
@@ -65,7 +84,7 @@ namespace VirtualPresta
                 CsvCollection collection = new CsvCollection();
                 foreach (string key in Data.Keys)
                 {
-                    if (key != "ImageFiles" && key != "File")
+                    if (key != translate("ImageFiles") && key != translate("File"))
                     {
                         collection.Add(key, Data[key]);
                     }

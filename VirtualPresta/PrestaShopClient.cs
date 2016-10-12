@@ -179,21 +179,33 @@ namespace VirtualPresta
 
         internal void DownloadProduct(Product product, string v)
         {
-            
-        }
+            forceGo(string.Format("index.php?controller=AdminProducts&id_product={0}&updateproduct", product.Id));
 
-        public IEnumerable<Product> getProductsSummary()
-        {
-            while (!webDriver.Url.Contains("index.php?controller=AdminProducts&exportproduct"))
+            webDriver.FindElement(By.Id("link-VirtualProduct")).Click();
+            string fileAddress = "";
+            while (fileAddress == "")
             {
-                webDriver.Url = BaseAddress + "index.php?controller=AdminProducts&exportproduct";
+                foreach (IWebElement element in webDriver.FindElements(By.CssSelector("a.btn.btn-default")))
+                {
+                    if (element.GetAttribute("href").Contains("get-file-admin.php?file="))
+                    {
+                        fileAddress = element.GetAttribute("href");
+                        element.Click();
+                        break;
+                    }
+                }
                 System.Threading.Thread.Sleep(100);
             }
-            WebDriverWait wait = new WebDriverWait(webDriver, new TimeSpan(0, 0, 5));
-            wait.Until(ExpectedConditions.UrlContains("AdminProducts"));
-            List<string> invalid_inputs = new List<string>();
-            webDriver.FindElement(By.CssSelector("a.btn.btn-continue")).Click();
-            string dir = Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
+            string downloadPath = webDriver.FindElement(By.Id("virtual_product_name")).GetAttribute("value");
+            string directory = Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
+            waitWhileDownlaodComplete(directory, downloadPath);
+            string newPath = Path.Combine(directory, downloadPath);
+            if (!newPath.Equals(downloadPath))
+                File.Move(newPath, v + downloadPath);
+        }
+
+        private void waitWhileDownlaodComplete(string directory, string pattern)
+        {
             bool gotFile = false;
             while (!gotFile)
             {
@@ -201,13 +213,34 @@ namespace VirtualPresta
                 {
 
 
-                    StreamWriter writer = new StreamWriter(Directory.GetFiles(dir, "product*.csv").First(), true);
+                    StreamWriter writer = new StreamWriter(Directory.GetFiles(directory, pattern).First(), true);
                     gotFile = true;
                     writer.Close();
                 }
                 catch (Exception) { }
                 System.Threading.Thread.Sleep(100);
             }
+        }
+
+        private void forceGo(string address)
+        {
+
+            while (!webDriver.Url.Contains(address))
+            {
+                webDriver.Url = BaseAddress + address;
+                System.Threading.Thread.Sleep(100);
+            }
+            WebDriverWait wait = new WebDriverWait(webDriver, new TimeSpan(0, 0, 5));
+            wait.Until(ExpectedConditions.UrlContains(address));
+            List<string> invalid_inputs = new List<string>();
+            webDriver.FindElement(By.CssSelector("a.btn.btn-continue")).Click();
+        }
+
+        public IEnumerable<Product> getProductsSummary()
+        {
+            forceGo("index.php?controller=AdminProducts&exportproduct");
+            string dir = Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
+            waitWhileDownlaodComplete(dir, "product*.csv");
             foreach(Product product in GetProductsFromCSV(Directory.GetFiles(dir, "product*.csv").First()))
             {
                 yield return product;
@@ -241,7 +274,7 @@ namespace VirtualPresta
             string header = reader.ReadLine();
             while (!reader.EndOfStream)
             {
-                yield return new Product() { Data = new CsvCollection() { Data = header + Environment.NewLine + reader.ReadLine() } };
+                yield return new Product(header.Contains("شناسه")) { Data = new CsvCollection() { Data = header + Environment.NewLine + reader.ReadLine() } };
             }
             reader.Close();
             yield break;
