@@ -152,7 +152,7 @@ namespace VirtualPresta
                     System.Threading.Thread.Sleep(1000);
                 }
 
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(2000);
             }
 
             webDriver.FindElement(By.Id("link-VirtualProduct")).Click();
