@@ -42,8 +42,12 @@ namespace VirtualPresta
             log("got products");
             int counter = 0;
             int totalWork = 2 + products.Count(product => { return !product.FileAndImagesSaved; });
-            
-            client = new PrestaShopClient("http://4piano.ir/admin300ix65de/", Properties.Settings.Default.username, Properties.Settings.Default.password, false, this);
+            try {
+                client = new PrestaShopClient("http://4piano.ir/admin300ix65de/", Properties.Settings.Default.username, Properties.Settings.Default.password, false, this);
+            }catch(Exception ex)
+            {
+                log(ex.ToString());
+            }
             log("initialized client");
             counter++;
             uploadBackgroundWorker.ReportProgress(100 * counter / totalWork);

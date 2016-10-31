@@ -28,6 +28,7 @@ namespace VirtualPresta
             this.parentLogger = logger;
             this.BaseAddress = baseAddress;
             ChromeDriverService service = ChromeDriverService.CreateDefaultService();
+            logger.log("created chrome service. ");
             var options = new ChromeOptions();
             if (scilence)
             {
@@ -38,8 +39,9 @@ namespace VirtualPresta
 
             options.AddUserProfilePreference("download.default_directory", Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath));
             webDriver = new ChromeDriver(service, options);
-
+            logger.log("created Chrome driver.");
             webDriver.Url = baseAddress;
+            logger.log("set url for login. ");
             webDriver.FindElement(By.CssSelector("#email")).SendKeys(email);
             webDriver.FindElement(By.Id("passwd")).SendKeys(password);
             webDriver.FindElement(By.CssSelector("button")).Click();
